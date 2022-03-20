@@ -19,8 +19,6 @@ namespace projekt_wsp
                 Console.WriteLine("Bajt na pozycji 0 ma 1");
             }
             else Console.WriteLine("Bajt na pozycji 0 ma 0");
-
-
         }
     }
 }
