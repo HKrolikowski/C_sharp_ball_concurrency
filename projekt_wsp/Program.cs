@@ -5,7 +5,6 @@ namespace projekt_wsp
 
     class Program
     {
-        //Console.WriteLine();
         static void Main(string[] args)
         {
             Bajt bajt = new Bajt(65);
