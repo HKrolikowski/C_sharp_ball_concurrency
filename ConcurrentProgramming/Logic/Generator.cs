@@ -6,14 +6,13 @@ namespace Logic
 {
     public class Generator
     {
+        private Random generator = new Random();
+        private int _x;
+        private int _y;
+        private int _radius = 15;
+        private float _speed = 0.5f;
 
-            private Random generator = new Random();
-            private int _x;
-            private int _y;
-            private int _radius = 15;
-            private int _speed = 13;
-
-        public Generator() {}
+        public Generator() { }
 
         public void GenerateXY()
         {
@@ -38,14 +37,14 @@ namespace Logic
             get => _y;
             set => _y = value;
         }
-        
-        private int Radius
+
+        public int Radius
         {
             get => _radius;
             set => _radius = value;
         }
 
-        private int Speed
+        public float Speed
         {
             get => _speed;
             set => _speed = value;

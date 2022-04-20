@@ -1,14 +1,7 @@
-﻿//__________________________________________________________________________________________
-//
-//  Copyright 2022 Mariusz Postol LODZ POLAND.
-//
-//  To be in touch join the community by pressing the `Watch` button and to get started
-//  comment using the discussion panel at
-//  https://github.com/mpostol/TP/discussions/182
-//  with an introduction of yourself and tell us about what you do with this community.
-//__________________________________________________________________________________________
-
+﻿
+using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Windows.Input;
 using TP.ConcurrentProgramming.PresentationModel;
 using TP.ConcurrentProgramming.PresentationViewModel.MVVMLight;
@@ -17,70 +10,109 @@ namespace TP.ConcurrentProgramming.PresentationViewModel
 {
   public class MainWindowViewModel : ViewModelBase
 
-  {
-    #region public API
+  {  
+        private IList _balls;
+        private int _radius;
+        private ModelAbstractApi ModelLayer = ModelAbstractApi.CreateApi();
+        //private int b_Content;
+        private int _width;
+        private int _height;
+        private int _number;
 
-    public MainWindowViewModel() : this(ModelAbstractApi.CreateApi())
-    {
-    }
 
-    public MainWindowViewModel(ModelAbstractApi modelAbstractApi)
-    {
-      ModelLayer = modelAbstractApi;
-      Radious = ModelLayer.Radius;
-      ButtomClick = new RelayCommand(() => ClickHandler());
-    }
+        public MainWindowViewModel() : this(ModelAbstractApi.CreateApi())
+        {
+        }
 
-    public IList<object> CirclesCollection
-    {
-      get
-      {
-        return b_CirclesCollection;
-      }
-      set
-      {
-        if (value.Equals(b_CirclesCollection))
-          return;
-        RaisePropertyChanged("CirclesCollection");
-      }
-    }
+        public MainWindowViewModel(ModelAbstractApi modelAbstractApi)
+        {
+          ModelLayer = modelAbstractApi;
+          _radius = ModelLayer.Radius;
+          ButtonClick = new RelayCommand(() => ClickHandler());
+          _height = ModelLayer.Height + 4;
+          _width = ModelLayer.Width + 4;  
+          _balls = ModelLayer.CreateBalls(_number);
+           Trace.WriteLine("Wywolano konstruktor");
+        }
 
-    public int Radious
-    {
-      get
-      {
-        return b_Radious;
-      }
-      set
-      {
-        if (value.Equals(b_Radious))
-          return;
-        b_Radious = value;
-        RaisePropertyChanged("Radious");
-      }
-    }
 
-    public ICommand ButtomClick { get; set; }
+        public int Radius
+        {
+          get
+          {
+            return Radius;
+          }
+        }
 
-    private void ClickHandler()
-    {
-      this.Close();
-    }
 
-    private void Close()
-    {
-      throw new System.NotImplementedException();
-    }
+        public ICommand ButtonClick { get; set; }
 
-    #endregion public API
+        private void ClickHandler()
+        {
+               ModelLayer.CreateBalls(_number);
+                
+                ModelLayer.Moving();
+            Trace.WriteLine("dsa");
+            //if(_number == 2)
+            //    this.Close();
+        }
 
-    #region private
+        private void Close()
+        {
+          throw new System.NotImplementedException();
+        }
 
-    private IList<object> b_CirclesCollection;
-    private int b_Radious;
-    private ModelAbstractApi ModelLayer = ModelAbstractApi.CreateApi();
 
-    #endregion private
+        public int Height
+        {
+            get
+            {
+                return _height;
+            }
+        }
 
+        public int Width
+        {
+            get
+            {
+                return _width;
+            }
+        }
+
+        public int Number
+        {
+            get
+            {
+                return _number;
+            }
+            set
+            {
+                if (value.Equals(_number))
+                    return;
+                if (value < 0 && value > 100)
+                    value = 2;
+                _number = value;
+                RaisePropertyChanged(nameof(Number));
+            }
+        }
+
+        public IList Balls
+        {
+            get
+            {
+                return _balls;
+            }
+            set
+            {
+                if (value.Equals(_balls))
+                    return;
+                _balls = value;
+                RaisePropertyChanged(nameof(Balls));
+            }
+        }
+
+
+
+    
   }
 }

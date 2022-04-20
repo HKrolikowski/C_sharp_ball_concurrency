@@ -20,8 +20,8 @@ namespace PresentationViewModelTest
     public void ConstructorTest()
     {
       MainWindowViewModel window = new MainWindowViewModel();
-      Assert.IsNotNull(window.ButtomClick);
-      Assert.IsTrue(window.ButtomClick.CanExecute(null));
+      Assert.IsNotNull(window.ButtonClick);
+      Assert.IsTrue(window.ButtonClick.CanExecute(null));
     }
   }
 }
