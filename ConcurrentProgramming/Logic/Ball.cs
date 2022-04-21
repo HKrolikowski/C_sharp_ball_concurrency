@@ -154,5 +154,10 @@ namespace Logic
         {
             get => _vectorCurrent.Y;
         }
+
+        public float Speed
+        {
+            get => _speed;
+        }
     }
 }

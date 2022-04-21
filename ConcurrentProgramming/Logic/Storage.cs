@@ -12,7 +12,7 @@ namespace Logic
         public static int height = 400;
         private Generator _generator = new Generator();
         private ObservableCollection<Ball> _balls = new ObservableCollection<Ball>();
-        private List<Task> _tasks;
+        private List<Task> _tasks = new List<Task>();
         CancellationTokenSource tokenSource;
         CancellationToken token;
 
@@ -36,7 +36,6 @@ namespace Logic
             {
                 tokenSource = new CancellationTokenSource();
                 token = tokenSource.Token;
-                _tasks = new List<Task>();
                 for (int i = 0; i < number; i++)
                 {
                     Ball ball = _generator.GenerateBall();
@@ -60,7 +59,6 @@ namespace Logic
         {
             foreach (Ball ball in _balls)
             {
-                Thread.Sleep(1);
                 Task task = Task.Run(() =>
                 {
                     while (true)
@@ -83,6 +81,11 @@ namespace Logic
         public ObservableCollection<Ball> Balls
         {
             get => _balls;
+        }
+
+        public List<Task> Tasks
+        {
+            get => _tasks;
         }
 
     }

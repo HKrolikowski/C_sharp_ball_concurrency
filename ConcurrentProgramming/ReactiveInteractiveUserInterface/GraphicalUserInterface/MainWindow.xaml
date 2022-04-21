@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="clr-namespace:TP.ConcurrentProgramming.PresentationViewModel;assembly=TP.ConcurrentProgramming.PresentationViewModel"
         mc:Ignorable="d"
-        Title="Presentation layer targeting reactive/interactive behaviour" Height="800" Width="1000">
+        Title="Moving balls!" Height="800" Width="1000">
     <Window.DataContext>
         <vm:MainWindowViewModel />
     </Window.DataContext>

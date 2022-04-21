@@ -73,11 +73,15 @@ namespace TP.ConcurrentProgramming.PresentationViewModel
                 try
                 {
                     int val = System.Int32.Parse(_text);
-                    if (val > 0)
+                    if (val > 0 && val <= 20)
                     {
                         _number = val;
-                        RaisePropertyChanged(nameof(Number));
+                    } else
+                    {
+                        _number = 0;
                     }
+                    RaisePropertyChanged(nameof(Number));
+
                 }
                 catch (System.FormatException)
                 {

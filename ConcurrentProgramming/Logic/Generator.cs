@@ -9,7 +9,7 @@ namespace Logic
         private int _x;
         private int _y;
         private int _radius = 15;
-        private float _speed = 0.5f;
+        private float _speed = 1f;
 
         public Generator() { }
 
