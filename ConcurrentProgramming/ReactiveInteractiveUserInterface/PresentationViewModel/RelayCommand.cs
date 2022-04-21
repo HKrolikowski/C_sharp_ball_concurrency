@@ -1,17 +1,7 @@
-﻿//__________________________________________________________________________________________
-//
-//  Copyright 2022 Mariusz Postol LODZ POLAND.
-//
-//  To be in touch join the community by pressing the `Watch` button and to get started
-//  comment using the discussion panel at
-//  https://github.com/mpostol/TP/discussions/182
-//  with an introduction of yourself and tell us about what you do with this community.
-//__________________________________________________________________________________________
-
-using System;
+﻿using System;
 using System.Windows.Input;
 
-namespace TP.ConcurrentProgramming.PresentationViewModel.MVVMLight
+namespace TP.ConcurrentProgramming.PresentationViewModel
 {
   /// <summary>
   /// A generic command whose sole purpose is to relay its functionality to other

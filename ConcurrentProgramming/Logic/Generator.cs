@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+
 
 namespace Logic
 {
     public class Generator
     {
-        private Random generator = new Random();
+        private Random _generator = new Random();
         private int _x;
         private int _y;
         private int _radius = 15;
@@ -16,8 +15,8 @@ namespace Logic
 
         public void GenerateXY()
         {
-            this.X = generator.Next(2 + _radius, Storage.width - _radius - 2);
-            this.Y = generator.Next(2 + _radius, Storage.height - _radius - 2);
+            this.X = _generator.Next(2 + _radius, Storage.width - _radius - 2);
+            this.Y = _generator.Next(2 + _radius, Storage.height - _radius - 2);
         }
 
         public Ball GenerateBall()

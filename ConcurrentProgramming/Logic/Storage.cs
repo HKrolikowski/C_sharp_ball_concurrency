@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Threading;
@@ -14,7 +13,8 @@ namespace Logic
         private Generator _generator = new Generator();
         private ObservableCollection<Ball> _balls = new ObservableCollection<Ball>();
         private List<Task> _tasks;
-        public int wide = 30;
+        CancellationTokenSource tokenSource;
+        CancellationToken token;
 
         public Storage()
         {
@@ -32,11 +32,27 @@ namespace Logic
 
         public void CreateBalls(int number)
         {
-            _tasks = new List<Task>();
-            for (int i = 0; i < number; i++)
+            if (number > 0)
             {
-                Ball ball = _generator.GenerateBall();
-                AddBall(ball);
+                tokenSource = new CancellationTokenSource();
+                token = tokenSource.Token;
+                _tasks = new List<Task>();
+                for (int i = 0; i < number; i++)
+                {
+                    Ball ball = _generator.GenerateBall();
+                    AddBall(ball);
+                }
+            }
+            
+        }
+
+        public void StopBalls()
+        {   
+            if (tokenSource != null && !tokenSource.IsCancellationRequested)
+            {
+                tokenSource.Cancel();
+                _tasks.Clear();
+                _balls.Clear();
             }
         }
 
@@ -51,12 +67,12 @@ namespace Logic
                     {
                         Thread.Sleep(5);
                         ball.UpdatePosition();
+                        try { token.ThrowIfCancellationRequested(); }
+                        catch (System.OperationCanceledException) { break; } //Rzuca OperationCanceledException jeżeli jest zgłoszone cancel.
                     }
-
                 });
                 _tasks.Add(task);
             }
-            //Task.WaitAll(_tasks.ToArray());//chyba tak
         }
 
         public Generator Generator
@@ -67,7 +83,6 @@ namespace Logic
         public ObservableCollection<Ball> Balls
         {
             get => _balls;
-            set => _balls = value ?? throw new ArgumentNullException(nameof(value));
         }
 
     }

@@ -78,30 +78,29 @@ namespace Logic
             {
                 edge = 3;
             }
-            int finalowa;
-            int wylosowana = random.Next(1, 4);
-            if (edge > wylosowana)
+            int destinationWall;
+            int wall = random.Next(1, 4);
+            if (edge > wall)
             {
-                finalowa = wylosowana;
+                destinationWall = wall;
             }
-            else if (wylosowana == 3)
+            else if (wall == 3)
             {
-                finalowa = 4;
+                destinationWall = 4;
             }
             else
-                finalowa = edge + wylosowana;
+                destinationWall = edge + wall;
             float XCoordinate;
             float YCoordinate;
-            if (finalowa < 3)
+            if (destinationWall < 3)
             {
                 YCoordinate = random.Next(_radius, Storage.height - _radius);
-                XCoordinate = (finalowa % 2) * (Storage.width - 2 * _radius) + _radius;
-
+                XCoordinate = (destinationWall % 2) * (Storage.width - 2 * _radius) + _radius;
             }
             else
             {
                 XCoordinate = random.Next(_radius, Storage.width - _radius);
-                YCoordinate = ((finalowa - 2) % 2) * (Storage.height - 2 * _radius) + _radius;
+                YCoordinate = ((destinationWall - 2) % 2) * (Storage.height - 2 * _radius) + _radius;
             }
             _vectorDestination.X = XCoordinate;
             _vectorDestination.Y = YCoordinate;
@@ -127,9 +126,8 @@ namespace Logic
             }
             RaisePropertyChanged(nameof(X));
             RaisePropertyChanged(nameof(Y));
-
-
         }
+
         public Vector2 VectorCurrent
         {
             get => _vectorCurrent;

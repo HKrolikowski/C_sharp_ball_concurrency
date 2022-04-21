@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows.Input;
 using TP.ConcurrentProgramming.PresentationModel;
-using TP.ConcurrentProgramming.PresentationViewModel.MVVMLight;
+using TP.ConcurrentProgramming.PresentationViewModel;
 
 namespace TP.ConcurrentProgramming.PresentationViewModel
 {
@@ -12,12 +12,11 @@ namespace TP.ConcurrentProgramming.PresentationViewModel
 
   {  
         private IList _balls;
-        private int _radius;
         private ModelAbstractApi ModelLayer = ModelAbstractApi.CreateApi();
-        //private int b_Content;
         private int _width;
         private int _height;
         private int _number;
+        private string _text;
 
 
         public MainWindowViewModel() : this(ModelAbstractApi.CreateApi())
@@ -27,41 +26,27 @@ namespace TP.ConcurrentProgramming.PresentationViewModel
         public MainWindowViewModel(ModelAbstractApi modelAbstractApi)
         {
           ModelLayer = modelAbstractApi;
-          _radius = ModelLayer.Radius;
-          ButtonClick = new RelayCommand(() => ClickHandler());
+          StartClick = new RelayCommand(() => CreateBalls());
+          StopClick = new RelayCommand(() => StopBalls());
           _height = ModelLayer.Height + 4;
           _width = ModelLayer.Width + 4;  
           _balls = ModelLayer.CreateBalls(_number);
-           Trace.WriteLine("Wywolano konstruktor");
         }
 
+        public ICommand StartClick { get; set; }
 
-        public int Radius
+        private void CreateBalls()
         {
-          get
-          {
-            return Radius;
-          }
+            ModelLayer.CreateBalls(_number);
+            ModelLayer.Moving();
         }
 
+        public ICommand StopClick { get; set; }
 
-        public ICommand ButtonClick { get; set; }
-
-        private void ClickHandler()
+        private void StopBalls()
         {
-               ModelLayer.CreateBalls(_number);
-                
-                ModelLayer.Moving();
-            Trace.WriteLine("dsa");
-            //if(_number == 2)
-            //    this.Close();
+            ModelLayer.StopBalls();     
         }
-
-        private void Close()
-        {
-          throw new System.NotImplementedException();
-        }
-
 
         public int Height
         {
@@ -79,21 +64,42 @@ namespace TP.ConcurrentProgramming.PresentationViewModel
             }
         }
 
+        public string Text
+        {
+            get { return _text; }
+            set
+            {
+                _text = value;
+                try
+                {
+                    int val = System.Int32.Parse(_text);
+                    if (val > 0)
+                    {
+                        _number = val;
+                        RaisePropertyChanged(nameof(Number));
+                    }
+                }
+                catch (System.FormatException)
+                {
+                    Trace.WriteLine("Text() z viewModel rzucil wyjatek Format");
+                    _number = 0;
+                    RaisePropertyChanged(nameof(Number));
+                }
+                catch (System.OverflowException)
+                {
+                    Trace.WriteLine("Text() z viewModel rzucil wyjatek Overflow");
+                    _number = 0;
+                    RaisePropertyChanged(nameof(Number));
+                }
+            }
+        }
+
         public int Number
         {
             get
             {
                 return _number;
-            }
-            set
-            {
-                if (value.Equals(_number))
-                    return;
-                if (value < 0 && value > 100)
-                    value = 2;
-                _number = value;
-                RaisePropertyChanged(nameof(Number));
-            }
+            }         
         }
 
         public IList Balls
@@ -110,9 +116,5 @@ namespace TP.ConcurrentProgramming.PresentationViewModel
                 RaisePropertyChanged(nameof(Balls));
             }
         }
-
-
-
-    
   }
 }
