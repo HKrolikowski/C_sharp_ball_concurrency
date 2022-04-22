@@ -104,8 +104,6 @@ namespace Logic
             }
             _vectorDestination.X = XCoordinate;
             _vectorDestination.Y = YCoordinate;
-            double howManyChanges = System.Math.Sqrt((System.Math.Pow(_vectorCurrent.X - _vectorDestination.X, 2) + System.Math.Pow(_vectorCurrent.Y - _vectorDestination.Y, 2))) / _speed;
-
         }
 
         public void UpdatePosition()

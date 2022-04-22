@@ -26,7 +26,7 @@
                 <Rectangle Canvas.Left="13" Canvas.Top="13" Height='{Binding Height}' Width='{Binding Width}' StrokeThickness="4" Stroke="Blue"/>
 
                 <!-- pilki -->
-                <ItemsControl ItemsSource="{Binding Balls, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+                <ItemsControl ItemsSource="{Binding Balls, UpdateSourceTrigger=PropertyChanged}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
                             <Canvas/>

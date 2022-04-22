@@ -112,13 +112,6 @@ namespace TP.ConcurrentProgramming.PresentationViewModel
             {
                 return _balls;
             }
-            set
-            {
-                if (value.Equals(_balls))
-                    return;
-                _balls = value;
-                RaisePropertyChanged(nameof(Balls));
-            }
         }
   }
 }

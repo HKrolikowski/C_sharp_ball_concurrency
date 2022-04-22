@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Logic
 {
-    public class Storage
+    public class Storage : LogicApi
     {
         public static int width = 800;
         public static int height = 400;
