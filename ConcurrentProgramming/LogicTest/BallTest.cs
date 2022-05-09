@@ -10,7 +10,7 @@ namespace LogicTest
         public void Setup()
         {
         }
-
+        /*
         [Test]
         public void BallConstructor()
         {
@@ -62,6 +62,6 @@ namespace LogicTest
             Assert.AreEqual(Vector2.Distance(ball.VectorCurrent, first), System.Math.Ceiling(2f));
             Assert.AreEqual(12, System.Math.Ceiling(ball.VectorCurrent.X));
             Assert.AreEqual(10, ball.VectorCurrent.Y);
-        }
+        }*/
     }
 }

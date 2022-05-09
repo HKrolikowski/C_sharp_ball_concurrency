@@ -7,9 +7,11 @@ namespace Logic
     public class Ball : INotifyPropertyChanged
     {
         private Vector2 _vectorCurrent;
-        private float _speed;
-        private Vector2 _vectorDestination;
         private int _radius;
+        private float _mass;
+        private Vector2 _velocity;
+        //ped = mass*velocity
+        private bool _canMove = true;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -28,34 +30,13 @@ namespace Logic
             _radius = 15;
         }
 
-        public Ball(int x, int y, int radius, float speed)
+        public Ball(float x, float y, int radius, float mass, Vector2 velocity)
         {
             _vectorCurrent.X = x;
             _vectorCurrent.Y = y;
             _radius = radius;
-            _speed = speed;
-            System.Random random = new System.Random();
-            int edge = random.Next(1, 5);// 4 - down, 1 - right, 3 - up, 2 - left
-            if (edge == 1)
-            {
-                _vectorDestination.X = Storage.width - _radius;
-                _vectorDestination.Y = random.Next(_radius, Storage.height - _radius);
-            }
-            else if (edge == 2)
-            {
-                _vectorDestination.X = _radius;
-                _vectorDestination.Y = random.Next(_radius, Storage.height - _radius);
-            }
-            else if (edge == 3)
-            {
-                _vectorDestination.Y = Storage.height - _radius;
-                _vectorDestination.X = random.Next(_radius, Storage.width - _radius);
-            }
-            else
-            {
-                _vectorDestination.Y = _radius;
-                _vectorDestination.X = random.Next(_radius, Storage.width - _radius);
-            }
+            _mass = mass;
+            _velocity = velocity;
         }
 
         public void generateNewVectorDestination()
@@ -102,40 +83,56 @@ namespace Logic
                 XCoordinate = random.Next(_radius, Storage.width - _radius);
                 YCoordinate = ((destinationWall - 2) % 2) * (Storage.height - 2 * _radius) + _radius;
             }
-            _vectorDestination.X = XCoordinate;
-            _vectorDestination.Y = YCoordinate;
+            //_vectorDestination.X = XCoordinate;
+            //_vectorDestination.Y = YCoordinate;
         }
 
         public void UpdatePosition()
         {
-            if (_vectorCurrent == _vectorDestination)
+            if (_canMove)
             {
-                generateNewVectorDestination();
+                _vectorCurrent += _velocity;
+
+
+                //Odbicia od scian
+                if (VectorCurrent.X + Velocity.X > Storage.width - Radius)
+                {
+                    X = Storage.width - Radius;
+                    VX = Velocity.X * (-1);
+                } 
+                else if (VectorCurrent.X + Velocity.X < Radius)
+                {
+                    X = Radius;
+                    VX = Velocity.X * (-1);
+                }
+                else if (VectorCurrent.Y + Velocity.Y > Storage.height - Radius)
+                {
+                    Y = Storage.height - Radius;
+                    VY = Velocity.Y * (-1);
+                }
+                else if (VectorCurrent.Y + Velocity.Y < Radius)
+                {
+                    Y = Radius;
+                    VY = Velocity.Y * (-1);
+                }
+
+
+                RaisePropertyChanged(nameof(X));
+                RaisePropertyChanged(nameof(Y));
             }
-            double howManyChanges = System.Math.Sqrt((System.Math.Pow(_vectorCurrent.X - _vectorDestination.X, 2) + System.Math.Pow(_vectorCurrent.Y - _vectorDestination.Y, 2))) / _speed;
-            if (howManyChanges < 1)
-            {
-                _vectorCurrent = _vectorDestination;
-            }
-            else
-            {
-                _vectorCurrent.X += (float)((_vectorDestination.X - _vectorCurrent.X) / howManyChanges);
-                _vectorCurrent.Y += (float)((_vectorDestination.Y - _vectorCurrent.Y) / howManyChanges);
-            }
-            RaisePropertyChanged(nameof(X));
-            RaisePropertyChanged(nameof(Y));
+            
         }
+
 
         public Vector2 VectorCurrent
         {
             get => _vectorCurrent;
             set => _vectorCurrent = value;
         }
-
-        public Vector2 VectorDestination
+        public Vector2 Velocity
         {
-            get => _vectorDestination;
-            set => _vectorDestination = value;
+            get => _velocity;
+            set => _velocity = value;
         }
 
         public int Diameter
@@ -146,16 +143,41 @@ namespace Logic
         public float X
         {
             get => _vectorCurrent.X;
+            set => _vectorCurrent.X = value;
         }
 
         public float Y
         {
             get => _vectorCurrent.Y;
+            set => _vectorCurrent.Y = value;
         }
 
-        public float Speed
+        public float VX
         {
-            get => _speed;
+            get => _velocity.X;
+            set => _velocity.X = value;
+        }
+
+        public float VY
+        {
+            get => _velocity.Y;
+            set => _velocity.Y = value;
+        }
+
+        public int Radius
+        {
+            get => _radius;
+        }
+        public float Mass
+        {
+            get => _mass;
+            set => _mass = value;
+        }
+
+        public bool CanMove
+        {
+            get => _canMove;
+            set => _canMove = value;
         }
     }
 }

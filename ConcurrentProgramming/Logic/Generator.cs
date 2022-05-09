@@ -1,5 +1,5 @@
 ﻿using System;
-
+using System.Numerics;
 
 namespace Logic
 {
@@ -9,20 +9,26 @@ namespace Logic
         private int _x;
         private int _y;
         private int _radius = 15;
-        private float _speed = 1f;
 
         public Generator() { }
 
         public void GenerateXY()
         {
-            this.X = _generator.Next(2 + _radius, Storage.width - _radius - 2);
-            this.Y = _generator.Next(2 + _radius, Storage.height - _radius - 2);
-        }
+             }
+        
+        public void GenerateVelocity()
+        {
 
+        }
         public Ball GenerateBall()
         {
-            GenerateXY();
-            return new Ball(X, Y, Radius, Speed);
+            float X = _generator.Next(2 + _radius, Storage.width - _radius - 2);
+            float Y = _generator.Next(2 + _radius, Storage.height - _radius - 2);
+            float mass = (float) _generator.NextDouble() * 5;
+            float velocityX = (float) _generator.NextDouble() * (3 + 3) - 3;
+            float velocityY = (float) _generator.NextDouble() * (3 + 3) - 3;
+            Vector2 velocity = new Vector2(velocityX, velocityY);
+            return new Ball(X, Y, Radius, mass, velocity);
         }
 
         public int X
@@ -43,10 +49,6 @@ namespace Logic
             set => _radius = value;
         }
 
-        public float Speed
-        {
-            get => _speed;
-            set => _speed = value;
-        }
+
     }
 }

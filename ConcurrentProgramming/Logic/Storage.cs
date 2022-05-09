@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Numerics;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -55,8 +56,9 @@ namespace Logic
             }
         }
 
-        public void Moving()
+        public async void Moving()
         {
+            //Trace.WriteLine("Zaczynamy ruszac kule");
             foreach (Ball ball in _balls)
             {
                 Task task = Task.Run(() =>
@@ -70,7 +72,50 @@ namespace Logic
                     }
                 });
                 _tasks.Add(task);
+                _tasks.Add(Task.Run(() => Collisions()));
             }
+        }
+
+        public async void Collisions()
+        { 
+            while(true)
+            {
+                //Jezeli Ball1.Velocity.X jest +AND Ball1.Pos.X > Ball2.Pos.X AND Ball2.Velocity.X jest -
+                for (int i = 0; i < _balls.Count - 1; i++)
+                {
+                    for (int j = i + 1; j < _balls.Count; j++)
+                    {
+                        if (!((_balls[i].VX > 0 && _balls[j].VX < 0 && _balls[i].X > _balls[j].X) 
+                            || (_balls[i].VX < 0 && _balls[j].VX > 0 && _balls[i].X < _balls[j].X) 
+                            || (_balls[i].VY > 0 && _balls[j].VY < 0 && _balls[i].Y > _balls[j].Y)
+                            || (_balls[i].VY < 0 && _balls[j].VY > 0 && _balls[i].Y < _balls[j].Y)))
+                        {
+                            float distance = Vector2.Distance(_balls[i].VectorCurrent, _balls[j].VectorCurrent);
+                            if (distance < (_balls[i].Radius + _balls[j].Radius)) //(_balls[i].Velocity + _balls[j].Velocity).Length() )
+                            {
+                                _balls[i].CanMove = false;
+                                _balls[j].CanMove = false;
+                                BallCrash(_balls[i], _balls[j]);
+                                _balls[i].CanMove = true;
+                                _balls[j].CanMove = true;
+                            }
+                        }
+
+                    }
+                }
+            } 
+        }
+        public void BallCrash(Ball b1, Ball b2)
+        {
+            //Trace.WriteLine("Doszlo do zderzenia");
+            Vector2 newVelocity1 = b1.Velocity - 2 * b2.Mass / (b1.Mass + b2.Mass) * Vector2.Dot(b1.Velocity - b2.Velocity, b1.VectorCurrent - b2.VectorCurrent) / Vector2.DistanceSquared(b1.VectorCurrent, b2.VectorCurrent) * (b1.VectorCurrent - b2.VectorCurrent);
+            Vector2 newVelocity2 = b2.Velocity - 2 * b1.Mass / (b1.Mass + b2.Mass) * Vector2.Dot(b2.Velocity - b1.Velocity, b2.VectorCurrent - b1.VectorCurrent) / Vector2.DistanceSquared(b2.VectorCurrent, b1.VectorCurrent) * (b2.VectorCurrent - b1.VectorCurrent);
+
+
+            //Vector2 newVelocity1 = (b1.Velocity * (b1.Mass - b2.Mass) + b2.Velocity * 2 * b2.Mass) / (b1.Mass + b2.Mass);
+            //Vector2 newVelocity2 = (b2.Velocity * (b2.Mass - b1.Mass) + b1.Velocity * 2 * b1.Mass) / (b1.Mass + b2.Mass);
+            b1.Velocity = newVelocity1;
+            b2.Velocity = newVelocity2;
         }
 
         public Generator Generator
