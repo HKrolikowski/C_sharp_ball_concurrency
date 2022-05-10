@@ -24,7 +24,7 @@ namespace Logic
         {
             float X = _generator.Next(2 + _radius, Storage.width - _radius - 2);
             float Y = _generator.Next(2 + _radius, Storage.height - _radius - 2);
-            float mass = (float) _generator.NextDouble() * 5;
+            float mass = (float) _generator.NextDouble() * 2;
             float velocityX = (float) _generator.NextDouble() * (3 + 3) - 3;
             float velocityY = (float) _generator.NextDouble() * (3 + 3) - 3;
             Vector2 velocity = new Vector2(velocityX, velocityY);

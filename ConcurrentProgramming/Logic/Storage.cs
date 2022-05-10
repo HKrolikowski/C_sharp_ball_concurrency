@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Data;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Numerics;
@@ -9,6 +10,7 @@ namespace Logic
 {
     public class Storage : LogicApi
     {
+        private DataAbstractApi dataAbstract;
         public static int width = 800;
         public static int height = 400;
         private Generator _generator = new Generator();
@@ -81,39 +83,52 @@ namespace Logic
             while(true)
             {
                 //Jezeli Ball1.Velocity.X jest +AND Ball1.Pos.X > Ball2.Pos.X AND Ball2.Velocity.X jest -
+                try {
                 for (int i = 0; i < _balls.Count - 1; i++)
                 {
                     for (int j = i + 1; j < _balls.Count; j++)
-                    {
-                        if (!((_balls[i].VX > 0 && _balls[j].VX < 0 && _balls[i].X > _balls[j].X) 
-                            || (_balls[i].VX < 0 && _balls[j].VX > 0 && _balls[i].X < _balls[j].X) 
-                            || (_balls[i].VY > 0 && _balls[j].VY < 0 && _balls[i].Y > _balls[j].Y)
-                            || (_balls[i].VY < 0 && _balls[j].VY > 0 && _balls[i].Y < _balls[j].Y)))
-                        {
+                    {  
+                                /*if (!((_balls[i].VX > 0 && _balls[j].VX < 0 && _balls[i].X > _balls[j].X) 
+                                || (_balls[i].VX < 0 && _balls[j].VX > 0 && _balls[i].X < _balls[j].X) 
+                                || (_balls[i].VY > 0 && _balls[j].VY < 0 && _balls[i].Y > _balls[j].Y)
+                                || (_balls[i].VY < 0 && _balls[j].VY > 0 && _balls[i].Y < _balls[j].Y)))
+                            {*/
                             float distance = Vector2.Distance(_balls[i].VectorCurrent, _balls[j].VectorCurrent);
-                            if (distance < (_balls[i].Radius + _balls[j].Radius)) //(_balls[i].Velocity + _balls[j].Velocity).Length() )
+                            if (distance <= (_balls[i].Radius + _balls[j].Radius))
                             {
-                                _balls[i].CanMove = false;
-                                _balls[j].CanMove = false;
-                                BallCrash(_balls[i], _balls[j]);
-                                _balls[i].CanMove = true;
-                                _balls[j].CanMove = true;
+                                if (Vector2.Distance(_balls[i].VectorCurrent, _balls[j].VectorCurrent) // do poprawy laczenie pilek po odbiciu
+                                - Vector2.Distance(_balls[i].VectorCurrent + _balls[i].Velocity, _balls[j].VectorCurrent + _balls[i].Velocity) > 0)
+                                {
+                                    _balls[i].CanMove = false;
+                                    _balls[j].CanMove = false;
+                                    BallCrash(_balls[i], _balls[j]);
+                                    _balls[i].CanMove = true;
+                                    _balls[j].CanMove = true;
+                                }
                             }
-                        }
-
+                            
+                         
                     }
                 }
+                }
+                catch (System.ArgumentOutOfRangeException) { break; }
             } 
         }
         public void BallCrash(Ball b1, Ball b2)
         {
             //Trace.WriteLine("Doszlo do zderzenia");
-            Vector2 newVelocity1 = b1.Velocity - 2 * b2.Mass / (b1.Mass + b2.Mass) * Vector2.Dot(b1.Velocity - b2.Velocity, b1.VectorCurrent - b2.VectorCurrent) / Vector2.DistanceSquared(b1.VectorCurrent, b2.VectorCurrent) * (b1.VectorCurrent - b2.VectorCurrent);
-            Vector2 newVelocity2 = b2.Velocity - 2 * b1.Mass / (b1.Mass + b2.Mass) * Vector2.Dot(b2.Velocity - b1.Velocity, b2.VectorCurrent - b1.VectorCurrent) / Vector2.DistanceSquared(b2.VectorCurrent, b1.VectorCurrent) * (b2.VectorCurrent - b1.VectorCurrent);
+            //Vector2 newVelocity1 = b1.Velocity - 2 * b2.Mass / (b1.Mass + b2.Mass) * Vector2.Dot(b1.Velocity - b2.Velocity, b1.VectorCurrent - b2.VectorCurrent) / Vector2.DistanceSquared(b1.VectorCurrent, b2.VectorCurrent) * (b1.VectorCurrent - b2.VectorCurrent);
+            //Vector2 newVelocity2 = b2.Velocity - 2 * b1.Mass / (b1.Mass + b2.Mass) * Vector2.Dot(b2.Velocity - b1.Velocity, b2.VectorCurrent - b1.VectorCurrent) / Vector2.DistanceSquared(b2.VectorCurrent, b1.VectorCurrent) * (b2.VectorCurrent - b1.VectorCurrent);
 
 
-            //Vector2 newVelocity1 = (b1.Velocity * (b1.Mass - b2.Mass) + b2.Velocity * 2 * b2.Mass) / (b1.Mass + b2.Mass);
-            //Vector2 newVelocity2 = (b2.Velocity * (b2.Mass - b1.Mass) + b1.Velocity * 2 * b1.Mass) / (b1.Mass + b2.Mass);
+            Vector2 newVelocity1 = (b1.Velocity * (b1.Mass - b2.Mass) + b2.Velocity * 2 * b2.Mass) / (b1.Mass + b2.Mass);
+            Vector2 newVelocity2 = (b2.Velocity * (b2.Mass - b1.Mass) + b1.Velocity * 2 * b1.Mass) / (b1.Mass + b2.Mass);
+            //Trace.WriteLine(b1.Velocity);
+            //Trace.WriteLine(newVelocity1);
+            //Trace.WriteLine(b2.Velocity);
+            //Trace.WriteLine(newVelocity2);
+            //Trace.WriteLine("");
+
             b1.Velocity = newVelocity1;
             b2.Velocity = newVelocity2;
         }
