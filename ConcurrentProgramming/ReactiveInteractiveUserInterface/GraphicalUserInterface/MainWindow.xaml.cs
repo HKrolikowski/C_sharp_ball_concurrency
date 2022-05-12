@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows;
+using TP.ConcurrentProgramming.PresentationViewModel;
 
 namespace TP.ConcurrentProgramming.PresentationView
 {

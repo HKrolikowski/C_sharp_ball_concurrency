@@ -6,7 +6,7 @@ namespace LogicTest
 {
     public class GeneratorTests
     {
-        
+        /*
         [Test]
         public void generateBallTest()
         {
@@ -15,6 +15,6 @@ namespace LogicTest
             Assert.True(ball.VectorCurrent.X >= 2 + generator.Radius && ball.VectorCurrent.X <= Storage.width - generator.Radius - 1);
             Assert.True(ball.VectorCurrent.Y >= 2 + generator.Radius && ball.VectorCurrent.Y <= Storage.height - generator.Radius - 1);
             Assert.True(ball.Diameter / 2 == generator.Radius);
-        }
+        }*/
     }
 }

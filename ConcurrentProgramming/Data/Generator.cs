@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Numerics;
 
-namespace Logic
+namespace Data
 {
     public class Generator
     {
@@ -9,6 +9,8 @@ namespace Logic
         private int _x;
         private int _y;
         private int _radius = 15;
+        public static int width = 800;
+        public static int height = 400;
 
         public Generator() { }
 
@@ -22,11 +24,27 @@ namespace Logic
         }
         public Ball GenerateBall()
         {
-            float X = _generator.Next(2 + _radius, Storage.width - _radius - 2);
-            float Y = _generator.Next(2 + _radius, Storage.height - _radius - 2);
+            float X = _generator.Next(2 + _radius, width - _radius - 2);
+            float Y = _generator.Next(2 + _radius, height - _radius - 2);
             float mass = (float) _generator.NextDouble() * 2;
             float velocityX = (float) _generator.NextDouble() * (3 + 3) - 3;
             float velocityY = (float) _generator.NextDouble() * (3 + 3) - 3;
+            if(velocityX > -1 && velocityX < 0)
+            {
+                velocityX = -1;
+            }
+            if (velocityX > 0 && velocityX < 1)
+            {
+                velocityX = 1;
+            }
+            if (velocityY > -1 && velocityY < 0)
+            {
+                velocityY = -1;
+            }
+            if (velocityY > 0 && velocityY < 1)
+            {
+                velocityY = 1;
+            }
             Vector2 velocity = new Vector2(velocityX, velocityY);
             return new Ball(X, Y, Radius, mass, velocity);
         }
@@ -48,7 +66,5 @@ namespace Logic
             get => _radius;
             set => _radius = value;
         }
-
-
     }
 }

@@ -5,25 +5,24 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="clr-namespace:TP.ConcurrentProgramming.PresentationViewModel;assembly=TP.ConcurrentProgramming.PresentationViewModel"
         mc:Ignorable="d"
-        Title="Moving balls!" Height="800" Width="1000">
+        Title="Moving balls!" Height="800" Width="1200">
     <Window.DataContext>
         <vm:MainWindowViewModel />
     </Window.DataContext>
     <StackPanel Orientation="Vertical">
-
         <Canvas>
             <!-- Pole do wpisania-->
-            <TextBox Canvas.Left="250" Canvas.Top="100" TextAlignment="Left" FontSize="20" Height="30" Width="100" Text="{Binding Text}"/>
+            <TextBox Canvas.Left="250" Canvas.Top="100" TextAlignment="Left" FontSize="20" Height="30" Width="100" Text="{Binding NumberOfBalls, UpdateSourceTrigger=PropertyChanged}"/>
 
             <!-- Przycisk do startowania-->
-            <Button Canvas.Left="400" Canvas.Top="100" Height="30" Width="100" Content="Zacznij" Command="{Binding StartClick}"/>
+            <Button x:Name="StartButton" Content="Zacznij" Canvas.Left="400" Canvas.Top="100" Height="30" Width="100" Command="{Binding StartClick}"/>
 
             <!-- Przycisk do konczenia-->
-            <Button Canvas.Left="550" Canvas.Top="100" Height="30" Width="100" Content="Zatrzymaj" Command="{Binding StopClick}"/>
+            <Button Content="Zatrzymaj" Canvas.Left="550" Canvas.Top="100" Height="30" Width="100" Command="{Binding StopClick}"/>
 
-            <Canvas Canvas.Left="100" Canvas.Top="200" Height='{Binding Height}' Width='{Binding Width}'>
+            <Canvas Canvas.Left="100" Canvas.Top="200" Height='43' Width='55'>
                 <!-- Prostokat-->
-                <Rectangle Canvas.Left="13" Canvas.Top="13" Height='{Binding Height}' Width='{Binding Width}' StrokeThickness="4" Stroke="Blue"/>
+                <Rectangle Canvas.Left="13" Canvas.Top="13" Height="{Binding Height}" Width="{Binding Width}" StrokeThickness="4" Stroke="Blue"/>
 
                 <!-- pilki -->
                 <ItemsControl ItemsSource="{Binding Balls, UpdateSourceTrigger=PropertyChanged}">
@@ -34,13 +33,14 @@
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemContainerStyle>
                         <Style TargetType="ContentPresenter">
-                            <Setter Property="Canvas.Left" Value="{Binding X}"/>
-                            <Setter Property="Canvas.Top" Value="{Binding Y}"/>
+                            <Setter Property="Canvas.Left" Value="{Binding XPosition}" />
+                            <Setter Property="Canvas.Top" Value="{Binding YPosition}" />
                         </Style>
                     </ItemsControl.ItemContainerStyle>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Ellipse Width="{Binding Diameter}" Height='{Binding Diameter}' Fill="Blue"/>
+                            <Ellipse Height="{Binding Diameter}" Width="{Binding Diameter}" Fill="Blue"/>
+
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>

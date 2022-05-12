@@ -1,70 +1,55 @@
-﻿
-using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using TP.ConcurrentProgramming.PresentationModel;
+using System;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Windows.Input;
-using TP.ConcurrentProgramming.PresentationModel;
-using TP.ConcurrentProgramming.PresentationViewModel;
+using System.Collections;
+using System.Diagnostics;
 
 namespace TP.ConcurrentProgramming.PresentationViewModel
 {
-  public class MainWindowViewModel : ViewModelBase
-
-  {  
+    public class MainWindowViewModel : INotifyPropertyChanged
+    {
         private IList _balls;
-        private ModelAbstractApi ModelLayer = ModelAbstractApi.CreateApi();
-        private int _width;
-        private int _height;
         private int _number;
+        private int _height;
+        private int _width;
         private string _text;
+        private ModelAbstractApi model { get; set; }
 
-
-        public MainWindowViewModel() : this(ModelAbstractApi.CreateApi())
+        public MainWindowViewModel()
         {
+            model = ModelAbstractApi.CreateAPI();
+            StartClick = new RelayCommand(() => CreateBalls());
+            StopClick = new RelayCommand(() => StopBalls());
+            _height = model.Height + 4;
+            _width = model.Width + 4;
+            _balls = model.CreateBalls(_number);
         }
-
-        public MainWindowViewModel(ModelAbstractApi modelAbstractApi)
-        {
-          ModelLayer = modelAbstractApi;
-          StartClick = new RelayCommand(() => CreateBalls());
-          StopClick = new RelayCommand(() => StopBalls());
-          _height = ModelLayer.Height + 4;
-          _width = ModelLayer.Width + 4;  
-          _balls = ModelLayer.CreateBalls(_number);
-        }
-
-        public ICommand StartClick { get; set; }
-
-        private void CreateBalls()
-        {
-            ModelLayer.CreateBalls(_number);
-            ModelLayer.Moving();
-        }
-
-        public ICommand StopClick { get; set; }
-
-        private void StopBalls()
-        {
-            ModelLayer.StopBalls();     
-        }
-
-        public int Height
-        {
-            get
-            {
-                return _height;
-            }
-        }
-
         public int Width
         {
-            get
+            get => _width;
+            set
             {
-                return _width;
+                _width = value;
+                RaisePropertyChanged("Width");
             }
         }
-
-        public string Text
+        public int Height
+        {
+            get => _height;
+            set
+            {
+                _height = value;
+                RaisePropertyChanged("Height");
+            }
+        }
+       public IList Balls
+        {
+            get => _balls;
+        }
+        public string NumberOfBalls
         {
             get { return _text; }
             set
@@ -76,7 +61,8 @@ namespace TP.ConcurrentProgramming.PresentationViewModel
                     if (val > 0 && val <= 20)
                     {
                         _number = val;
-                    } else
+                    }
+                    else
                     {
                         _number = 0;
                     }
@@ -97,21 +83,30 @@ namespace TP.ConcurrentProgramming.PresentationViewModel
                 }
             }
         }
+        public ICommand StartClick { get; set; }
+        public ICommand StopClick { get; set; }
 
+        private void CreateBalls()
+        {
+            model.CreateBalls( _number);
+        }      
+        private void StopBalls()
+        {
+            model.StopBalls();
+        }
         public int Number
         {
             get
             {
                 return _number;
-            }         
-        }
-
-        public IList Balls
-        {
-            get
-            {
-                return _balls;
             }
         }
-  }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected virtual void RaisePropertyChanged([CallerMemberName] string propertyName = null)
+        {
+
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+    }
 }
