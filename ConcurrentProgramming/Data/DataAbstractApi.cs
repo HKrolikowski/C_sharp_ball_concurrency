@@ -18,7 +18,10 @@ namespace Data
         public abstract int Height { get; }
 
 
-        internal class DataApi : DataAbstractApi
+        
+
+    }
+    public class DataApi : DataAbstractApi
         {
             private Storage storage = new Storage();
             private int _width ;
@@ -53,6 +56,4 @@ namespace Data
                 get => storage.Width;
             }
         }
-
-    }
 }
