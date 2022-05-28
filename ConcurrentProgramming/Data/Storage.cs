@@ -32,7 +32,7 @@ namespace Data
         public void AddBall(Ball ball)
         {
             _balls.Add(ball);
-        }
+         }
 
         public void RemoveBall(Ball ball)
         {
@@ -64,15 +64,15 @@ namespace Data
             }
         }
 
-        public async void Moving()
+        public void Moving()
         {
             foreach (Ball ball in _balls)
             {
-                Task task = Task.Run(() =>
+                Task task = Task.Run(async () =>
                 {
                     while (true)
                     {
-                        Thread.Sleep(8);
+                        await Task.Delay(5);
                         lock(_lock)
                         {
                             ball.UpdatePosition();

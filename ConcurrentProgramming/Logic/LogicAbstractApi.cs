@@ -60,7 +60,7 @@ namespace Logic
                 b.CanMove = true;
             }
         }
-        public async void Collisions(int width, int height, int radius, Ball ball)
+        public void Collisions(int width, int height, int radius, Ball ball)
         {
             foreach (BallLogic thisBall in ballOperators)
             {

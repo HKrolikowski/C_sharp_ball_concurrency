@@ -9,9 +9,7 @@ namespace LogicTest
 {
     public class LogicTests
     {
-
-
-[SetUp]
+        [SetUp]
         public void Setup()
         {
         }
@@ -19,7 +17,7 @@ namespace LogicTest
         public void TestLogicApi()
         {
             DataAbstractApi data = new DataApi();
-            LogicAbstractApi logic = new LogicApi(data); //?
+            LogicAbstractApi logic = new LogicApi(data); 
             Assert.True(logic.Height == 400);
             Assert.True(logic.Width == 800);
             logic.CreateBalls(2);
