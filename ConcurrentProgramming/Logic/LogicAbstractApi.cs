@@ -1,11 +1,14 @@
 ﻿using Data;
-using System;
+//using Newtonsoft.Json;
+
+using System.Text.Json;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Threading;
 using System.Numerics;
 using System.Diagnostics;
+
 
 namespace Logic
 {
@@ -22,11 +25,13 @@ namespace Logic
         public abstract List<BallLogic> GetBalls();
         public abstract int Height { get; }
         public abstract int Width { get; }
+
     }
 
     public class LogicApi : LogicAbstractApi
     {
         private readonly DataAbstractApi data;
+        private object _lock = new object();
 
         public LogicApi(DataAbstractApi dataAbstractApi)
         {
@@ -57,7 +62,7 @@ namespace Logic
             if (e.PropertyName == "VectorCurrent")
             {
                 Collisions(Width, Height, b.Radius, b);
-                b.CanMove = true;
+               // b.CanMove = true;
             }
         }
         public void Collisions(int width, int height, int radius, Ball ball)
@@ -68,7 +73,7 @@ namespace Logic
                 {
                     continue;
                 }
-                thisBall.Ball.CanMove = false;
+                //thisBall.Ball.CanMove = false;
                 float distance = Vector2.Distance(ball.VectorCurrent, thisBall.Ball.VectorCurrent);
                 if (distance <= (ball.Radius + thisBall.Ball.Radius))
                 {
@@ -78,7 +83,7 @@ namespace Logic
                         BallCrash(ball, thisBall.Ball);
                     }
                 }
-                thisBall.Ball.CanMove = true;
+                //thisBall.Ball.CanMove = true;
             }
             if (ball.X + ball.VX > Width - radius)
             {
@@ -105,8 +110,12 @@ namespace Logic
             if (newVelocity1.Y > 5) newVelocity1.Y = 5;
             if (newVelocity1.Y < -5) newVelocity1.Y = -5;
             if (newVelocity1.X < -5) newVelocity1.X = -5;
-            b1.Velocity = newVelocity1;
-            b2.Velocity = newVelocity2;
+            lock (_lock)
+            {
+                b1.Velocity = newVelocity1;
+                b2.Velocity = newVelocity2;
+            }
+            string log = JsonSerializer.Serialize(b1);
         }
     }
 }

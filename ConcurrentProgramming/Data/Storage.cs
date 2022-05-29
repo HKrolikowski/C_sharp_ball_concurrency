@@ -1,10 +1,13 @@
 ﻿using Data;
+using System.Text.Json;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Numerics;
 using System.Threading;
 using System.Threading.Tasks;
+using System.IO;
+using System;
 
 namespace Data
 {
@@ -18,6 +21,9 @@ namespace Data
         CancellationTokenSource tokenSource;
         CancellationToken token;
         private object _lock = new object();
+        private object _lockFile = new object();
+        string fileName = "logs.json";
+
 
         public Storage()
         {
@@ -50,8 +56,9 @@ namespace Data
                     Ball ball = _generator.GenerateBall();
                     AddBall(ball);
                 }
+                Moving();
             }
-            Moving();
+            
         }
 
         public void StopBalls()
@@ -73,18 +80,34 @@ namespace Data
                     while (true)
                     {
                         await Task.Delay(5);
-                        lock(_lock)
-                        {
+                        //lock(_lock)
+                        //{
                             ball.UpdatePosition();
-                            while (ball.CanMove == false) { }
-                        }
-                        ball.UpdatePosition();
+                            //while (ball.CanMove == false) { }
+                        //}
                         try { token.ThrowIfCancellationRequested(); }
                         catch (System.OperationCanceledException) { break; } //Rzuca OperationCanceledException jeżeli jest zgłoszone cancel.
                     }
                 });
                 _tasks.Add(task);
             }
+            _tasks.Add(Task.Run(async () =>
+            {
+                System.IO.File.WriteAllText(fileName, string.Empty);
+                while (true)
+                { 
+                    await Task.Delay(5000);
+                    var options = new JsonSerializerOptions { WriteIndented = true };
+                    string jsonString = JsonSerializer.Serialize(_balls, options);
+                    string jsonString2 = "[ \"Date/Time\": \"" + DateTime.Now.ToString() + "\",\n  \"Balls\": " + jsonString + " ]\n"; 
+                    lock (_lockFile)
+                    {
+                        File.AppendAllText(fileName, jsonString2);
+                    }
+                    try { token.ThrowIfCancellationRequested(); }
+                    catch (System.OperationCanceledException) { break; } //Rzuca OperationCanceledException jeżeli jest zgłoszone cancel.
+                }
+            }));
         }
 
         public Generator Generator

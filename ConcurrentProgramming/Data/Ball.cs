@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Numerics;
+using System.Text.Json.Serialization;
 using System.Threading;
 
 namespace Data
@@ -12,7 +13,7 @@ namespace Data
         private int _radius;
         private float _mass;
         private Vector2 _velocity;
-        private bool _canMove = true;
+        //private bool _canMove = true;
      
         public Ball()
         {
@@ -35,29 +36,32 @@ namespace Data
 
         public void UpdatePosition()
         {
-            if (_canMove)
-            {
+           // if (_canMove)
+           // {
                 _vectorCurrent += _velocity;
-                _canMove = false;
+                //_canMove = false;
                 RaisePropertyChanged("VectorCurrent");
-            }
+            //}
         }
 
+        [JsonIgnore]
         public Vector2 VectorCurrent
         {
             get => _vectorCurrent;
             set => _vectorCurrent = value; 
         }
+
+        [JsonIgnore]
         public Vector2 Velocity
         {
             get => _velocity;
             set => _velocity = value;
         }
-        public bool CanMove
+        /*public bool CanMove
         {
             get => _canMove;
             set { _canMove = value; }
-        }
+        }*/
 
         public float X
         {
