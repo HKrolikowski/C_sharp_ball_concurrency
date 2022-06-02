@@ -80,10 +80,7 @@ namespace Data
                     while (true)
                     {
                         await Task.Delay(5);
-                        //lock(_lock)
-                        //{
-                            ball.UpdatePosition();
-                        //}
+                        ball.UpdatePosition();
                         try { token.ThrowIfCancellationRequested(); }
                         catch (System.OperationCanceledException) { break; } //Rzuca OperationCanceledException jeżeli jest zgłoszone cancel.
                     }

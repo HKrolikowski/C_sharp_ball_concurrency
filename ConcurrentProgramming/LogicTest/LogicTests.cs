@@ -43,7 +43,6 @@ namespace LogicTest
             Assert.True(ball1.VX == 1);
             logic.Collisions(800, 400, ball1.Radius, ball1);
             Assert.True(ball1.VX == -1);
-
             Vector2 velocity2 = new Vector2(2, 1.5f);
             Vector2 velocity3 = new Vector2(-1, -0.3f);
             Ball ball2 = new Ball(30, 20, 10, 2, velocity);
