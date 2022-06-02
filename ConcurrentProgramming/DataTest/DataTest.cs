@@ -2,6 +2,10 @@ using NUnit.Framework;
 using Data;
 using System.Numerics;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
+using System.Threading;
+using System.IO;
+using System.Diagnostics;
 
 namespace DataTest
 {
@@ -82,6 +86,25 @@ namespace DataTest
             Assert.True(0 == storage.Balls.Count);
         }
 
-
+        [Test]
+        public void fileExistTest()
+        {
+            Storage storage = new Storage();
+            storage.CreateBalls(3);
+            Thread.Sleep(1000);
+            var fil1 = new FileInfo(storage.FileName);
+            int length1 =  (int) fil1.Length;
+            Assert.AreNotEqual(length1, 0);
+            Thread.Sleep(3000);
+            fil1 = new FileInfo(storage.FileName);
+            int length2 = (int)fil1.Length;
+            Assert.False(length1 == length2);
+            storage.StopBalls();
+            storage.CreateBalls(1);
+            Thread.Sleep(100);
+            fil1 = new FileInfo(storage.FileName);
+            int length3 = (int)fil1.Length;
+            Assert.True(length3 < length2);
+        }
     }
 }

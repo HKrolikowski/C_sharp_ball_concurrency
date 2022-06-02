@@ -83,7 +83,6 @@ namespace Data
                         //lock(_lock)
                         //{
                             ball.UpdatePosition();
-                            //while (ball.CanMove == false) { }
                         //}
                         try { token.ThrowIfCancellationRequested(); }
                         catch (System.OperationCanceledException) { break; } //Rzuca OperationCanceledException jeżeli jest zgłoszone cancel.
@@ -96,7 +95,6 @@ namespace Data
                 System.IO.File.WriteAllText(fileName, string.Empty);
                 while (true)
                 { 
-                    await Task.Delay(5000);
                     var options = new JsonSerializerOptions { WriteIndented = true };
                     string jsonString = JsonSerializer.Serialize(_balls, options);
                     string jsonString2 = "[ \"Date/Time\": \"" + DateTime.Now.ToString() + "\",\n  \"Balls\": " + jsonString + " ]\n"; 
@@ -106,6 +104,7 @@ namespace Data
                     }
                     try { token.ThrowIfCancellationRequested(); }
                     catch (System.OperationCanceledException) { break; } //Rzuca OperationCanceledException jeżeli jest zgłoszone cancel.
+                    await Task.Delay(2000);
                 }
             }));
         }
@@ -113,6 +112,16 @@ namespace Data
         public Generator Generator
         {
             get => _generator;
+        }
+
+        public object LockFile
+        {
+            get => _lockFile;
+        }
+
+        public string FileName
+        {
+            get => fileName;
         }
 
         public ObservableCollection<Ball> Balls

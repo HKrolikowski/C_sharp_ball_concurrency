@@ -16,6 +16,9 @@ namespace Data
         public abstract ObservableCollection<Ball> GetBalls();
         public abstract int Width { get; }
         public abstract int Height { get; }
+        public abstract object LockFile { get; }
+        public abstract string FileName { get; }
+        public abstract void lockOnFile();
 
 
         
@@ -55,5 +58,17 @@ namespace Data
             {
                 get => storage.Width;
             }
+            public override object LockFile
+            {
+                get => storage.LockFile;
+            }
+            public override string FileName
+            {
+                get => storage.FileName;
+            }
+        public override void lockOnFile()
+        {
+
+        }
         }
 }

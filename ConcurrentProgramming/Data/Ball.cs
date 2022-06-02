@@ -13,7 +13,6 @@ namespace Data
         private int _radius;
         private float _mass;
         private Vector2 _velocity;
-        //private bool _canMove = true;
      
         public Ball()
         {
@@ -36,12 +35,8 @@ namespace Data
 
         public void UpdatePosition()
         {
-           // if (_canMove)
-           // {
                 _vectorCurrent += _velocity;
-                //_canMove = false;
                 RaisePropertyChanged("VectorCurrent");
-            //}
         }
 
         [JsonIgnore]
@@ -57,11 +52,6 @@ namespace Data
             get => _velocity;
             set => _velocity = value;
         }
-        /*public bool CanMove
-        {
-            get => _canMove;
-            set { _canMove = value; }
-        }*/
 
         public float X
         {
